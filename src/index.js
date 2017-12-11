@@ -7,19 +7,6 @@ import uniqueId from 'lodash.uniqueid';
  * @class StableUniqueId
  */
 class StableUniqueId extends React.Component {
-  static propTypes = {
-    /**
-     * ({ uniqueId: string }) => JSX
-     */
-    render: PropTypes.func.isRequired,
-    /**
-     * Optionally applies a prefix to the generated ID.
-     */
-    prefix: PropTypes.string,
-  };
-
-  state = { uniqueId: null };
-
   componentWillMount() {
     this.setState({ uniqueId: uniqueId() });
   }
@@ -30,7 +17,16 @@ class StableUniqueId extends React.Component {
     return render({ uniqueId: `${prefix || ''}${uniqueId}` });
   }
 }
-
+StableUniqueId.propTypes = {
+  /**
+   * ({ uniqueId: string }) => JSX
+   */
+  render: PropTypes.func.isRequired,
+  /**
+   * Optionally applies a prefix to the generated ID.
+   */
+  prefix: PropTypes.string,
+};
 export default StableUniqueId;
 
 /**
@@ -45,7 +41,10 @@ export const withStableUniqueId = ({ prefix, name = 'uniqueId' } = {}) =>
       <StableUniqueId
         prefix={prefix}
         render={({ uniqueId }) =>
-          React.createElement(Component, { [name]: uniqueId, ...props })
+          React.createElement(
+            Component,
+            Object.assign({ [name]: uniqueId }, props)
+          )
         }
       />
     ),

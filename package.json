@@ -7,7 +7,11 @@
   "module": "dist-es6/index.js",
   "scripts": {
     "precommit": "lint-staged",
-    "test": "jest"
+    "test": "jest",
+    "build:commonjs":
+      "cross-env NODE_ENV=commonjs babel src --ignore test.js --out-dir dist",
+    "build:es6": "babel src --ignore test.js --out-dir dist-es6",
+    "build": "npm run build:commonjs && npm run build:es6"
   },
   "repository": {
     "type": "git",
@@ -29,13 +33,17 @@
   },
   "homepage": "https://github.com/dallonf/react-stable-uniqueid#readme",
   "peerDependencies": {
-    "react": "15.x || 16.x"
+    "react": "15.x || 16.x",
+    "prop-types": "15.x || 16.x"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-env": "^2.4.1",
     "babel-jest": "^21.2.0",
-    "babel-preset-react-app": "^3.1.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.1.1",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
     "husky": "^0.14.3",
@@ -43,6 +51,7 @@
     "jest-enzyme": "^4.0.1",
     "lint-staged": "^6.0.0",
     "prettier": "^1.9.1",
+    "prop-types": "^15.6.0",
     "raf": "^3.4.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
