@@ -1,22 +1,24 @@
+import 'raf/polyfill';
 import React from 'react';
 import { configure as configureEnzyme, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import StableUniqueId, { withStableUniqueId } from './index';
+import 'jest-enzyme';
 
 configureEnzyme({ adapter: new Adapter() });
 
 var mockUniqueIdFn;
-jest.mock('lodash/uniqueId', () => {
+jest.mock('lodash.uniqueid', () => {
   mockUniqueIdFn = jest.fn();
   return mockUniqueIdFn;
 });
 
 beforeEach(() => {
-  // mockUniqueIdFn.mockReset();
-  // mockUniqueIdFn.mockImplementation(
-  //   prefix =>
-  //     `${prefix || ''}|mock-unique-id${mockUniqueIdFn.mock.calls.length}`
-  // );
+  mockUniqueIdFn.mockReset();
+  mockUniqueIdFn.mockImplementation(
+    prefix =>
+      `${prefix || ''}|mock-unique-id${mockUniqueIdFn.mock.calls.length}`
+  );
 });
 
 it('renders a uniqueId', () => {

@@ -28,6 +28,9 @@
     "url": "https://github.com/dallonf/react-stable-uniqueid/issues"
   },
   "homepage": "https://github.com/dallonf/react-stable-uniqueid#readme",
+  "peerDependencies": {
+    "react": "15.x || 16.x"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-env": "^2.4.1",
@@ -40,6 +43,7 @@
     "jest-enzyme": "^4.0.1",
     "lint-staged": "^6.0.0",
     "prettier": "^1.9.1",
+    "raf": "^3.4.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
@@ -48,5 +52,9 @@
   },
   "jest": {
     "testPathIgnorePatterns": ["/node_modules/", "/example/"]
+  },
+  "dependencies": {
+    "lodash.uniqueid": "^4.0.1",
+    "react-hoc": "^0.1.8"
   }
 }
