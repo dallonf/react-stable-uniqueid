@@ -1,0 +1,28 @@
+{
+  "name": "react-stable-uniqueid",
+  "version": "1.0.0",
+  "description": "A React component that provides a stable unique ID for accessibility, SVG effects, and other purposes",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dallonf/react-stable-uniqueid.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "uniqueid",
+    "lodash",
+    "unique",
+    "svg",
+    "accessibility"
+  ],
+  "author": "Dallon Feldner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dallonf/react-stable-uniqueid/issues"
+  },
+  "homepage": "https://github.com/dallonf/react-stable-uniqueid#readme"
+}
