@@ -54,13 +54,16 @@ export const withStableUniqueId = (
     Component => ({ _uniqueIdFn, ...props }) => (
       <StableUniqueId
         prefix={prefix}
-        render={({ uniqueId }) =>
-          React.createElement(Component, {
+        render={({ uniqueId }) => {
+          const childProps = {
             [name]: uniqueId,
-            _uniqueIdFn,
             ...props,
-          })
-        }
+          };
+          if (_uniqueIdFn) {
+            childProps._uniqueIdFn = _uniqueIdFn;
+          }
+          return React.createElement(Component, childProps);
+        }}
         uniqueIdFn={_uniqueIdFn || uniqueIdFn}
       />
     ),
