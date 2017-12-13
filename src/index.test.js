@@ -49,6 +49,19 @@ it('renders OK without a prefix', () => {
   expect(wrapper).toContainReact(<div>|mock-unique-id1</div>);
 });
 
+it('allows customizing the uniqueIdFn', () => {
+  const uniqueIdFn = jest.fn(() => 'Mocked Unique ID');
+  const wrapper = shallow(
+    <StableUniqueId
+      prefix="myPrefix"
+      uniqueIdFn={uniqueIdFn}
+      render={({ uniqueId }) => <div>{uniqueId}</div>}
+    />
+  );
+  expect(wrapper).toContainReact(<div>Mocked Unique ID</div>);
+  expect(uniqueIdFn).toHaveBeenCalledWith('myPrefix');
+});
+
 describe('withStableUniqueId', () => {
   // eslint-disable-next-line react/prop-types
   const TestComponent = ({ uniqueId, ...props }) => (
@@ -87,5 +100,25 @@ describe('withStableUniqueId', () => {
         prop2={false}
       />
     );
+  });
+
+  it('allows uniqueIdFn to be provided in options', () => {
+    const uniqueIdFn = jest.fn(() => 'Mocked Unique ID');
+    const WrappedComponent = withStableUniqueId({
+      uniqueIdFn,
+    })(TestComponent);
+    const wrapper = shallow(<WrappedComponent prop1={true} prop2={false} />);
+    const stableUniqueId = wrapper.find(StableUniqueId);
+    expect(stableUniqueId).toHaveProp('uniqueIdFn', uniqueIdFn);
+  });
+
+  it('allows uniqueIdFn to be provided in props', () => {
+    const uniqueIdFn = jest.fn(() => 'Mocked Unique ID');
+    const WrappedComponent = withStableUniqueId()(TestComponent);
+    const wrapper = shallow(
+      <WrappedComponent prop1={true} prop2={false} _uniqueIdFn={uniqueIdFn} />
+    );
+    const stableUniqueId = wrapper.find(StableUniqueId);
+    expect(stableUniqueId).toHaveProp('uniqueIdFn', uniqueIdFn);
   });
 });
