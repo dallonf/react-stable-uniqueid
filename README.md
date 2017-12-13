@@ -63,13 +63,25 @@ Optional. If provided, adds a prefix to the generated unique ID.
 
 Optional. If provided, renames the `uniqueId` prop added to the wrapped component.
 
+`uniqueIdFn: () => string`
+
+Optional. If provided, uses this function instead of Lodash's to generate a unique ID. Useful for testing.
+
+### Wrapped component props
+
+`_uniqueIdFn: () => string`
+
+Optional. If provided, uses this function instead of Lodash's to generate a unique ID. Useful for testing. This prop will be consumed by the wrapper and will not be passed down to the wrapped component.
+
+Note that this function will only be called once; if you update the prop, a new unique ID will not be generated using the new function.
+
 ## Gotchas
 
 The generated id will not change on re-renders, but it will change if a component instance is unmounted and re-mounted. It is only guaranteed to be stable or unique as long as the component is mounted.
 
 ### Testing
 
-I recommend stubbing this component in tests, especially if you're snapshot testing or asserting on the generated, because this component is not guaranteed to be deterministic.
+I recommend stubbing this component or using the `uniqueIdFn` setting in tests, especially if you're snapshot testing or asserting on the generated, because the default function is not guaranteed to be deterministic.
 
 ### Server-side rendering
 

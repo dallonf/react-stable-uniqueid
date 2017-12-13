@@ -46,10 +46,12 @@ export default StableUniqueId;
  * @param {string} opts.prefix
  * @param {string} opts.name The name of the string prop that will be passed to the component
  */
-export const withStableUniqueId = ({ prefix, name = 'uniqueId' } = {}) =>
+export const withStableUniqueId = (
+  { prefix, name = 'uniqueId', uniqueIdFn } = {}
+) =>
   reactHoc(
     // eslint-disable-next-line react/display-name
-    Component => props => (
+    Component => ({ _uniqueIdFn, ...props }) => (
       <StableUniqueId
         prefix={prefix}
         render={({ uniqueId }) =>
@@ -58,6 +60,7 @@ export const withStableUniqueId = ({ prefix, name = 'uniqueId' } = {}) =>
             Object.assign({ [name]: uniqueId }, props)
           )
         }
+        uniqueIdFn={_uniqueIdFn || uniqueIdFn}
       />
     ),
     'withStableUniqueId'
