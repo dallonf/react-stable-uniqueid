@@ -32,6 +32,12 @@ A fairly standard [render prop](https://cdb.reacttraining.com/use-a-render-prop-
 
 Optional. If provided, adds a prefix to the generated unique ID.
 
+`uniqueIdFn: () => string`
+
+Optional. If provided, uses this function instead of Lodash's to generate a unique ID. Useful for testing.
+
+Note that this function will only be called once; if you update the prop, a new unique ID will not be generated using the new function.
+
 ## Higher Order Component (HOC) Usage
 
 ```js

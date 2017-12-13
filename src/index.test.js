@@ -50,7 +50,7 @@ it('renders OK without a prefix', () => {
 });
 
 it('allows customizing the uniqueIdFn', () => {
-  const uniqueIdFn = jest.fn(() => 'Mocked Unique ID');
+  const uniqueIdFn = jest.fn(() => '|Mocked Unique ID');
   const wrapper = shallow(
     <StableUniqueId
       prefix="myPrefix"
@@ -58,8 +58,8 @@ it('allows customizing the uniqueIdFn', () => {
       render={({ uniqueId }) => <div>{uniqueId}</div>}
     />
   );
-  expect(wrapper).toContainReact(<div>Mocked Unique ID</div>);
-  expect(uniqueIdFn).toHaveBeenCalledWith('myPrefix');
+  expect(wrapper).toContainReact(<div>myPrefix|Mocked Unique ID</div>);
+  expect(uniqueIdFn).toHaveBeenCalledWith();
 });
 
 describe('withStableUniqueId', () => {
