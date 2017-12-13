@@ -78,8 +78,10 @@ describe('withStableUniqueId', () => {
     expect(stableUniqueId).toHaveProp('prefix', 'testPrefix');
     expect(stableUniqueId).toHaveProp('render');
     const renderFn = stableUniqueId.prop('render');
-    const result = renderFn({ uniqueId: '_injectedUniqueId_' });
-    expect(result).toEqual(
+    const result = shallow(
+      <div>{renderFn({ uniqueId: '_injectedUniqueId_' })}</div>
+    );
+    expect(result).toContainReact(
       <TestComponent uniqueId="_injectedUniqueId_" prop1={true} prop2={false} />
     );
   });
@@ -92,8 +94,10 @@ describe('withStableUniqueId', () => {
     const wrapper = shallow(<WrappedComponent prop1={true} prop2={false} />);
     const stableUniqueId = wrapper.find(StableUniqueId);
     const renderFn = stableUniqueId.prop('render');
-    const result = renderFn({ uniqueId: '_injectedUniqueId_' });
-    expect(result).toEqual(
+    const result = shallow(
+      <div>{renderFn({ uniqueId: '_injectedUniqueId_' })}</div>
+    );
+    expect(result).toContainReact(
       <TestComponent
         myRenamedUniqueId="_injectedUniqueId_"
         prop1={true}
