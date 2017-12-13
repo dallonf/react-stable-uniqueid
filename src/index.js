@@ -55,7 +55,11 @@ export const withStableUniqueId = (
       <StableUniqueId
         prefix={prefix}
         render={({ uniqueId }) =>
-          React.createElement(Component, { [name]: uniqueId, ...props })
+          React.createElement(Component, {
+            [name]: uniqueId,
+            _uniqueIdFn,
+            ...props,
+          })
         }
         uniqueIdFn={_uniqueIdFn || uniqueIdFn}
       />

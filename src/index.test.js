@@ -112,7 +112,7 @@ describe('withStableUniqueId', () => {
     expect(stableUniqueId).toHaveProp('uniqueIdFn', uniqueIdFn);
   });
 
-  it('allows uniqueIdFn to be provided in props', () => {
+  it('allows _uniqueIdFn to be provided in props', () => {
     const uniqueIdFn = jest.fn(() => 'Mocked Unique ID');
     const WrappedComponent = withStableUniqueId()(TestComponent);
     const wrapper = shallow(
@@ -120,5 +120,17 @@ describe('withStableUniqueId', () => {
     );
     const stableUniqueId = wrapper.find(StableUniqueId);
     expect(stableUniqueId).toHaveProp('uniqueIdFn', uniqueIdFn);
+  });
+
+  it('passes _uniqueIdFn down to child component', () => {
+    const uniqueIdFn = jest.fn(() => 'Mocked Unique ID');
+    const WrappedComponent = withStableUniqueId()(TestComponent);
+    const wrapper = shallow(
+      <WrappedComponent prop1={true} prop2={false} _uniqueIdFn={uniqueIdFn} />
+    );
+    const stableUniqueId = wrapper.find(StableUniqueId);
+    const renderFn = stableUniqueId.prop('render');
+    const result = renderFn({ uniqueId: '_injectedUniqueId_' });
+    expect(result.props._uniqueIdFn).toEqual(uniqueIdFn);
   });
 });

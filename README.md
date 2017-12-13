@@ -71,7 +71,7 @@ Optional. If provided, uses this function instead of Lodash's to generate a uniq
 
 `_uniqueIdFn: () => string`
 
-Optional. If provided, uses this function instead of Lodash's to generate a unique ID. Useful for testing. This prop will be consumed by the wrapper and will not be passed down to the wrapped component.
+Optional. If provided, uses this function instead of Lodash's to generate a unique ID. Useful for testing. This prop will _not_ be consumed by the wrapper and will also be passed down to the wrapped component.
 
 Note that this function will only be called once; if you update the prop, a new unique ID will not be generated using the new function.
 
