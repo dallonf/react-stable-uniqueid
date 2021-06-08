@@ -16,7 +16,7 @@ jest.mock('lodash.uniqueid', () => {
 beforeEach(() => {
   mockUniqueIdFn.mockReset();
   mockUniqueIdFn.mockImplementation(
-    prefix =>
+    (prefix) =>
       `${prefix || ''}|mock-unique-id${mockUniqueIdFn.mock.calls.length}`
   );
 });
@@ -74,7 +74,7 @@ describe('withStableUniqueId', () => {
     );
     const wrapper = shallow(<WrappedComponent prop1={true} prop2={false} />);
     const stableUniqueId = wrapper.find(StableUniqueId);
-    expect(stableUniqueId).toBePresent();
+    expect(stableUniqueId).toExist();
     expect(stableUniqueId).toHaveProp('prefix', 'testPrefix');
     expect(stableUniqueId).toHaveProp('render');
     const renderFn = stableUniqueId.prop('render');
