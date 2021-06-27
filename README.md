@@ -12,12 +12,42 @@ A utility to generate a unique ID (using [Lodash.uniqueId](https://lodash.com/do
 npm install --save react-stable-uniqueid
 ```
 
-## Render Prop Usage
+## Hook Usage
 
-As a render prop:
+As a React hook:
 
 ```js
-import StableUniqueId from 'react-stable-unique-id';
+import { useStableUniqueId } from 'react-stable-unique-id';
+
+const uniqueId = useStableUniqueId('myPrefix', {
+  uniqueIdFn: myCustomUniqueIdFn,
+});
+```
+
+### Arguments
+
+`prefix: string | undefined`
+
+Optional. If provided, adds a prefix to the generated unique ID.
+
+### Options
+
+`uniqueIdFn: () => string`
+
+Optional. If provided, uses this function instead of Lodash's to generate a unique ID. Useful for testing.
+
+Note that this function will only be called once; if you update the prop, a new unique ID will not be generated using the new function.
+
+### Returns
+
+A string value
+
+## Render Prop Usage
+
+As a render prop component:
+
+```js
+import { StableUniqueId } from 'react-stable-unique-id';
 
 <StableUniqueId render={({ uniqueId }) => <div>Unique ID: {uniqueId}</div>} />;
 ```

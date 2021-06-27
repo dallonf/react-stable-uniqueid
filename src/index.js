@@ -40,6 +40,7 @@ StableUniqueId.defaultProps = {
   uniqueIdFn: uniqueId,
 };
 export default StableUniqueId;
+export { StableUniqueId };
 
 /**
  * @param {object} opts
