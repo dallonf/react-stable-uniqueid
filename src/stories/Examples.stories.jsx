@@ -1,5 +1,8 @@
 import * as React from 'react';
-import StableUniqueId, { withStableUniqueId } from '../index';
+import StableUniqueId, {
+  useStableUniqueId,
+  withStableUniqueId,
+} from '../index';
 
 export default {
   title: 'Examples',
@@ -51,3 +54,11 @@ const ComponentWithHOC = withStableUniqueId()(({ customProp, uniqueId }) => (
     Custom Prop: {customProp}
   </div>
 ));
+
+export const UsingHook = (args) => {
+  const uniqueId = useStableUniqueId(args.prefix);
+  return <div>Unique ID: {uniqueId}</div>;
+};
+UsingHook.argTypes = {
+  prefix: { control: 'text' },
+};

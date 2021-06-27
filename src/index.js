@@ -13,7 +13,7 @@ class StableUniqueId extends React.Component {
   }
 
   render() {
-    const { render, prefix, uniqueIdFn } = this.props;
+    const { render, prefix } = this.props;
     const { uniqueId } = this.state;
     return render({ uniqueId: `${prefix || ''}${uniqueId}` });
   }
@@ -46,26 +46,35 @@ export default StableUniqueId;
  * @param {string} opts.prefix
  * @param {string} opts.name The name of the string prop that will be passed to the component
  */
-export const withStableUniqueId = (
-  { prefix, name = 'uniqueId', uniqueIdFn } = {}
-) =>
+export const withStableUniqueId = ({
+  prefix,
+  name = 'uniqueId',
+  uniqueIdFn,
+} = {}) =>
   reactHoc(
     // eslint-disable-next-line react/display-name
-    Component => ({ _uniqueIdFn, ...props }) => (
-      <StableUniqueId
-        prefix={prefix}
-        render={({ uniqueId }) => {
-          const childProps = {
-            [name]: uniqueId,
-            ...props,
-          };
-          if (_uniqueIdFn) {
-            childProps._uniqueIdFn = _uniqueIdFn;
-          }
-          return React.createElement(Component, childProps);
-        }}
-        uniqueIdFn={_uniqueIdFn || uniqueIdFn}
-      />
-    ),
+    (Component) =>
+      ({ _uniqueIdFn, ...props }) =>
+        (
+          <StableUniqueId
+            prefix={prefix}
+            render={({ uniqueId }) => {
+              const childProps = {
+                [name]: uniqueId,
+                ...props,
+              };
+              if (_uniqueIdFn) {
+                childProps._uniqueIdFn = _uniqueIdFn;
+              }
+              return React.createElement(Component, childProps);
+            }}
+            uniqueIdFn={_uniqueIdFn || uniqueIdFn}
+          />
+        ),
     'withStableUniqueId'
   );
+
+export const useStableUniqueId = (prefix, { uniqueIdFn = uniqueId } = {}) => {
+  const [uniqueId] = React.useState(() => uniqueIdFn());
+  return `${prefix || ''}${uniqueId}`;
+};

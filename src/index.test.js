@@ -2,7 +2,7 @@ import 'raf/polyfill';
 import React from 'react';
 import { configure as configureEnzyme, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import StableUniqueId, { withStableUniqueId } from './index';
+import StableUniqueId, { useStableUniqueId, withStableUniqueId } from './index';
 import 'jest-enzyme';
 
 configureEnzyme({ adapter: new Adapter() });
@@ -136,5 +136,48 @@ describe('withStableUniqueId', () => {
     const renderFn = stableUniqueId.prop('render');
     const result = renderFn({ uniqueId: '_injectedUniqueId_' });
     expect(result.props._uniqueIdFn).toEqual(uniqueIdFn);
+  });
+});
+
+describe('useStableUniqueId', () => {
+  it('renders a uniqueId', () => {
+    const TestComponent = () => {
+      const uniqueId = useStableUniqueId('testPrefix');
+      return <div>{uniqueId}</div>;
+    };
+
+    const wrapper = shallow(<TestComponent />);
+    expect(wrapper).toContainReact(<div>testPrefix|mock-unique-id1</div>);
+  });
+
+  it('keeps the uniqueId stable when re-rendered', () => {
+    const TestComponent = () => {
+      const uniqueId = useStableUniqueId('testPrefix');
+      return <div>{uniqueId}</div>;
+    };
+    const wrapper = shallow(<TestComponent />);
+    wrapper.setProps({ updatedProp: 1 }).update();
+    expect(wrapper).toContainReact(<div>testPrefix|mock-unique-id1</div>);
+  });
+
+  it('renders OK without a prefix', () => {
+    const TestComponent = () => {
+      const uniqueId = useStableUniqueId();
+      return <div>{uniqueId}</div>;
+    };
+    const wrapper = shallow(<TestComponent />);
+    expect(wrapper).toContainReact(<div>|mock-unique-id1</div>);
+  });
+
+  it('allows customizing the uniqueIdFn', () => {
+    const uniqueIdFn = jest.fn(() => '|Mocked Unique ID');
+    const TestComponent = () => {
+      const uniqueId = useStableUniqueId('myPrefix', { uniqueIdFn });
+      return <div>{uniqueId}</div>;
+    };
+    const wrapper = shallow(<TestComponent />);
+
+    expect(wrapper).toContainReact(<div>myPrefix|Mocked Unique ID</div>);
+    expect(uniqueIdFn).toHaveBeenCalledWith();
   });
 });
