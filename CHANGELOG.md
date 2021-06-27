@@ -1,3 +1,7 @@
+# 1.2.1
+
+- Fix ES Modules build
+
 # 1.2.0
 
 - Added React Hooks implementation in addition to the Render Prop Component and Higher Order Component
