@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "module": "dist-es6/index.js",
   "scripts": {
-    "precommit": "lint-staged",
+    "prepare": "husky install",
     "test": "jest",
     "build:commonjs": "cross-env NODE_ENV=commonjs babel src --ignore test.js --out-dir dist",
     "build:es6": "babel src --ignore test.js --out-dir dist-es6",
@@ -48,7 +48,7 @@
     "cross-env": "^7.0.3",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
-    "husky": "^0.14.3",
+    "husky": "^6.0.0",
     "jest": "^27.0.5",
     "jest-enzyme": "^7.1.2",
     "lint-staged": "^11.0.0",
