@@ -8,15 +8,20 @@ export default {
 export const Simple = (args) => {
   return (
     <StableUniqueId
+      prefix={args.prefix}
       render={({ uniqueId }) => <div>Unique ID: {uniqueId}</div>}
     />
   );
+};
+Simple.argTypes = {
+  prefix: { control: 'text' },
 };
 
 export const WithState = (args) => {
   const [counter, setCounter] = React.useState(0);
   return (
     <StableUniqueId
+      prefix={args.prefix}
       render={({ uniqueId }) => (
         <div>
           Unique ID: {uniqueId}
@@ -30,6 +35,9 @@ export const WithState = (args) => {
       )}
     />
   );
+};
+WithState.argTypes = {
+  prefix: { control: 'text' },
 };
 
 export const UsingHOC = (args) => (
