@@ -3,14 +3,13 @@ import React from 'react';
 import { configure as configureEnzyme, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import StableUniqueId, { useStableUniqueId, withStableUniqueId } from './index';
+import mockUniqueIdFn from 'lodash.uniqueid';
 import 'jest-enzyme';
 
 configureEnzyme({ adapter: new Adapter() });
 
-var mockUniqueIdFn;
 jest.mock('lodash.uniqueid', () => {
-  mockUniqueIdFn = jest.fn();
-  return mockUniqueIdFn;
+  return { __esModule: true, default: jest.fn() };
 });
 
 beforeEach(() => {
