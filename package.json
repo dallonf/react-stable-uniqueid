@@ -1,6 +1,6 @@
 {
   "name": "react-stable-uniqueid",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A React component that provides a stable unique ID for accessibility, SVG effects, and other purposes",
   "main": "dist/index.js",
   "module": "dist-es6/index.js",
