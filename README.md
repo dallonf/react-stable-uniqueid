@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/dallonf/react-stable-uniqueid.svg?branch=master)](https://travis-ci.org/dallonf/react-stable-uniqueid)
 [![Coverage Status](https://coveralls.io/repos/dallonf/react-stable-uniqueid/badge.svg?branch=master&service=github)](https://coveralls.io/github/dallonf/react-stable-uniqueid?branch=master)
 
-# StableUniqueId
+# React Stable Unique ID
 
 A utility to generate a unique ID (using [Lodash.uniqueId](https://lodash.com/docs/4.17.4#uniqueId)) that does not change on re-renders. This is useful for form inputs (ex: `htmlFor`), SVG effects (`<defs>`), and other scenarios.
 
@@ -17,7 +17,7 @@ npm install --save react-stable-uniqueid
 As a React hook:
 
 ```js
-import { useStableUniqueId } from 'react-stable-unique-id';
+import { useStableUniqueId } from 'react-stable-uniqueid';
 
 const uniqueId = useStableUniqueId('myPrefix', {
   uniqueIdFn: myCustomUniqueIdFn,
@@ -47,7 +47,7 @@ A string value
 As a render prop component:
 
 ```js
-import { StableUniqueId } from 'react-stable-unique-id';
+import { StableUniqueId } from 'react-stable-uniqueid';
 
 <StableUniqueId render={({ uniqueId }) => <div>Unique ID: {uniqueId}</div>} />;
 ```
@@ -71,7 +71,7 @@ Note that this function will only be called once; if you update the prop, a new 
 ## Higher Order Component (HOC) Usage
 
 ```js
-import { withStableUniqueId } from 'react-stable-unique-id';
+import { withStableUniqueId } from 'react-stable-uniqueid';
 
 const MyComponent = ({ uniqueId }) => <div>Unique ID: {uniqueId}</div>;
 const WrappedMyComponent = withStableUniqueId({ prefix: 'mycomponent' });
