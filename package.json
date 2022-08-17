@@ -7,8 +7,8 @@
   "scripts": {
     "prepare": "husky install",
     "test": "jest",
-    "build:commonjs": "cross-env TARGET=commonjs babel src --ignore \"src/*.test.js\" --ignore \"src/stories/**\" --out-dir dist",
-    "build:es6": "cross-env TARGET=esm babel src --ignore \"src/*.test.js\" --ignore \"src/stories/**\" --out-dir dist-es6",
+    "build:commonjs": "cross-env TARGET=commonjs babel src --ignore \"src/*.test.js\" --ignore \"src/stories/**\" --ignore \"src/jest-setup.js\" --out-dir dist",
+    "build:es6": "cross-env TARGET=esm babel src --ignore \"src/*.test.js\" --ignore \"src/stories/**\" --ignore \"src/jest-setup.js\" --out-dir dist-es6",
     "build": "npm run build:commonjs && npm run build:es6",
     "storybook": "start-storybook -p 6006"
   },

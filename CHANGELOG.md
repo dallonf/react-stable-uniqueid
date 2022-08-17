@@ -1,3 +1,7 @@
+# 2.0.1
+
+- Removed `jest-setup.js` from build.
+
 # 2.0.0
 
 - Drop support for React 15
