@@ -1,3 +1,7 @@
+# 2.0.0
+
+- Drop support for React 15
+
 # 1.2.2
 
 - Update dependencies

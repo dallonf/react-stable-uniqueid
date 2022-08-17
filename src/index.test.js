@@ -1,12 +1,8 @@
 import 'raf/polyfill';
 import React from 'react';
-import { configure as configureEnzyme, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { render } from '@testing-library/react';
 import StableUniqueId, { useStableUniqueId, withStableUniqueId } from './index';
 import mockUniqueIdFn from 'lodash.uniqueid';
-import 'jest-enzyme';
-
-configureEnzyme({ adapter: new Adapter() });
 
 jest.mock('lodash.uniqueid', () => {
   return { __esModule: true, default: jest.fn() };
@@ -21,88 +17,85 @@ beforeEach(() => {
 });
 
 it('renders a uniqueId', () => {
-  const wrapper = shallow(
+  const { baseElement } = render(
     <StableUniqueId
       prefix="testPrefix"
       render={({ uniqueId }) => <div>{uniqueId}</div>}
     />
   );
-  expect(wrapper).toContainReact(<div>testPrefix|mock-unique-id1</div>);
+  expect(baseElement).toHaveTextContent('testPrefix|mock-unique-id1');
 });
 
 it('keeps the uniqueId stable when re-rendered', () => {
-  const wrapper = shallow(
+  const { rerender, baseElement } = render(
     <StableUniqueId
       prefix="testPrefix"
       render={({ uniqueId }) => <div>{uniqueId}</div>}
     />
   );
-  wrapper.setProps({ updatedProp: 1 }).update();
-  expect(wrapper).toContainReact(<div>testPrefix|mock-unique-id1</div>);
+  rerender(
+    <StableUniqueId
+      updatedProp={1}
+      prefix="testPrefix"
+      render={({ uniqueId }) => <div>{uniqueId}</div>}
+    />
+  );
+  expect(baseElement).toHaveTextContent('testPrefix|mock-unique-id1');
 });
 
 it('renders OK without a prefix', () => {
-  const wrapper = shallow(
+  const { baseElement } = render(
     <StableUniqueId render={({ uniqueId }) => <div>{uniqueId}</div>} />
   );
-  expect(wrapper).toContainReact(<div>|mock-unique-id1</div>);
+  expect(baseElement).toHaveTextContent('|mock-unique-id1');
 });
 
 it('allows customizing the uniqueIdFn', () => {
   const uniqueIdFn = jest.fn(() => '|Mocked Unique ID');
-  const wrapper = shallow(
+  const { baseElement } = render(
     <StableUniqueId
       prefix="myPrefix"
       uniqueIdFn={uniqueIdFn}
       render={({ uniqueId }) => <div>{uniqueId}</div>}
     />
   );
-  expect(wrapper).toContainReact(<div>myPrefix|Mocked Unique ID</div>);
+  expect(baseElement).toHaveTextContent('myPrefix|Mocked Unique ID');
   expect(uniqueIdFn).toHaveBeenCalledWith();
 });
 
 describe('withStableUniqueId', () => {
   // eslint-disable-next-line react/prop-types
   const TestComponent = ({ uniqueId, ...props }) => (
-    <div {...props}>{uniqueId}</div>
+    <div data-extra-props={JSON.stringify(props)}>{uniqueId}</div>
   );
 
   it('wraps with an HOC', () => {
     const WrappedComponent = withStableUniqueId({ prefix: 'testPrefix' })(
       TestComponent
     );
-    const wrapper = shallow(<WrappedComponent prop1={true} prop2={false} />);
-    const stableUniqueId = wrapper.find(StableUniqueId);
-    expect(stableUniqueId).toExist();
-    expect(stableUniqueId).toHaveProp('prefix', 'testPrefix');
-    expect(stableUniqueId).toHaveProp('render');
-    const renderFn = stableUniqueId.prop('render');
-    const result = shallow(
-      <div>{renderFn({ uniqueId: '_injectedUniqueId_' })}</div>
+    const { baseElement } = render(
+      <WrappedComponent prop1={true} prop2={false} />
     );
-    expect(result).toContainReact(
-      <TestComponent uniqueId="_injectedUniqueId_" prop1={true} prop2={false} />
-    );
+    expect(baseElement).toHaveTextContent('testPrefix|mock-unique-id1');
+    expect(
+      baseElement
+        .querySelector('[data-extra-props]')
+        .getAttribute('data-extra-props')
+    ).toEqual('{"prop1":true,"prop2":false}');
   });
 
   it('renames prop', () => {
+    const TestComponentExpectingRenamed = ({ myRenamedUniqueId }) => {
+      return <div>{myRenamedUniqueId}</div>;
+    };
     const WrappedComponent = withStableUniqueId({
       prefix: 'testPrefix',
       name: 'myRenamedUniqueId',
-    })(TestComponent);
-    const wrapper = shallow(<WrappedComponent prop1={true} prop2={false} />);
-    const stableUniqueId = wrapper.find(StableUniqueId);
-    const renderFn = stableUniqueId.prop('render');
-    const result = shallow(
-      <div>{renderFn({ uniqueId: '_injectedUniqueId_' })}</div>
+    })(TestComponentExpectingRenamed);
+    const { baseElement } = render(
+      <WrappedComponent prop1={true} prop2={false} />
     );
-    expect(result).toContainReact(
-      <TestComponent
-        myRenamedUniqueId="_injectedUniqueId_"
-        prop1={true}
-        prop2={false}
-      />
-    );
+    expect(baseElement).toHaveTextContent('testPrefix|mock-unique-id1');
   });
 
   it('allows uniqueIdFn to be provided in options', () => {
@@ -110,31 +103,29 @@ describe('withStableUniqueId', () => {
     const WrappedComponent = withStableUniqueId({
       uniqueIdFn,
     })(TestComponent);
-    const wrapper = shallow(<WrappedComponent prop1={true} prop2={false} />);
-    const stableUniqueId = wrapper.find(StableUniqueId);
-    expect(stableUniqueId).toHaveProp('uniqueIdFn', uniqueIdFn);
+    const { baseElement } = render(<WrappedComponent />);
+    expect(baseElement).toHaveTextContent('Mocked Unique ID');
   });
 
   it('allows _uniqueIdFn to be provided in props', () => {
     const uniqueIdFn = jest.fn(() => 'Mocked Unique ID');
     const WrappedComponent = withStableUniqueId()(TestComponent);
-    const wrapper = shallow(
-      <WrappedComponent prop1={true} prop2={false} _uniqueIdFn={uniqueIdFn} />
+    const { baseElement } = render(
+      <WrappedComponent _uniqueIdFn={uniqueIdFn} />
     );
-    const stableUniqueId = wrapper.find(StableUniqueId);
-    expect(stableUniqueId).toHaveProp('uniqueIdFn', uniqueIdFn);
+    expect(baseElement).toHaveTextContent('Mocked Unique ID');
   });
 
   it('passes _uniqueIdFn down to child component', () => {
+    const TestChildComponentExpectingUniqueIdFn = ({ _uniqueIdFn }) => {
+      <div>{_uniqueIdFn()}</div>;
+    };
     const uniqueIdFn = jest.fn(() => 'Mocked Unique ID');
     const WrappedComponent = withStableUniqueId()(TestComponent);
-    const wrapper = shallow(
-      <WrappedComponent prop1={true} prop2={false} _uniqueIdFn={uniqueIdFn} />
+    const { baseElement } = render(
+      <WrappedComponent _uniqueIdFn={uniqueIdFn} />
     );
-    const stableUniqueId = wrapper.find(StableUniqueId);
-    const renderFn = stableUniqueId.prop('render');
-    const result = renderFn({ uniqueId: '_injectedUniqueId_' });
-    expect(result.props._uniqueIdFn).toEqual(uniqueIdFn);
+    expect(baseElement).toHaveTextContent('Mocked Unique ID');
   });
 });
 
@@ -145,8 +136,8 @@ describe('useStableUniqueId', () => {
       return <div>{uniqueId}</div>;
     };
 
-    const wrapper = shallow(<TestComponent />);
-    expect(wrapper).toContainReact(<div>testPrefix|mock-unique-id1</div>);
+    const { baseElement } = render(<TestComponent />);
+    expect(baseElement).toHaveTextContent('testPrefix|mock-unique-id1');
   });
 
   it('keeps the uniqueId stable when re-rendered', () => {
@@ -154,9 +145,9 @@ describe('useStableUniqueId', () => {
       const uniqueId = useStableUniqueId('testPrefix');
       return <div>{uniqueId}</div>;
     };
-    const wrapper = shallow(<TestComponent />);
-    wrapper.setProps({ updatedProp: 1 }).update();
-    expect(wrapper).toContainReact(<div>testPrefix|mock-unique-id1</div>);
+    const { baseElement, rerender } = render(<TestComponent />);
+    rerender(<TestComponent updatedProp={1} />);
+    expect(baseElement).toHaveTextContent('testPrefix|mock-unique-id1');
   });
 
   it('renders OK without a prefix', () => {
@@ -164,8 +155,8 @@ describe('useStableUniqueId', () => {
       const uniqueId = useStableUniqueId();
       return <div>{uniqueId}</div>;
     };
-    const wrapper = shallow(<TestComponent />);
-    expect(wrapper).toContainReact(<div>|mock-unique-id1</div>);
+    const { baseElement } = render(<TestComponent />);
+    expect(baseElement).toHaveTextContent('|mock-unique-id1');
   });
 
   it('allows customizing the uniqueIdFn', () => {
@@ -174,9 +165,9 @@ describe('useStableUniqueId', () => {
       const uniqueId = useStableUniqueId('myPrefix', { uniqueIdFn });
       return <div>{uniqueId}</div>;
     };
-    const wrapper = shallow(<TestComponent />);
+    const { baseElement } = render(<TestComponent />);
 
-    expect(wrapper).toContainReact(<div>myPrefix|Mocked Unique ID</div>);
+    expect(baseElement).toHaveTextContent('myPrefix|Mocked Unique ID');
     expect(uniqueIdFn).toHaveBeenCalledWith();
   });
 });

@@ -6,6 +6,8 @@
 
 A utility to generate a unique ID (using [Lodash.uniqueId](https://lodash.com/docs/4.17.4#uniqueId)) that does not change on re-renders. This is useful for form inputs (ex: `htmlFor`), SVG effects (`<defs>`), and other scenarios.
 
+**NOTE:** This library does not support React 18. Instead, use the built-in [`useId`](https://reactjs.org/docs/hooks-reference.html#useid) hook.
+
 ## Installation
 
 ```
