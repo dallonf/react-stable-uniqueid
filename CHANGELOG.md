@@ -1,6 +1,7 @@
 # 2.0.0
 
 - Drop support for React 15
+- Stop using deprecated and "unsafe" `componentWillMount` lifecycle
 
 # 1.2.2
 

@@ -7,9 +7,14 @@ import uniqueId from 'lodash.uniqueid';
  * @class StableUniqueId
  */
 class StableUniqueId extends React.Component {
-  componentWillMount() {
-    const { uniqueIdFn } = this.props;
-    this.setState({ uniqueId: uniqueIdFn() });
+  state = {};
+
+  static getDerivedStateFromProps(props, state) {
+    if (!('uniqueId' in state)) {
+      return { uniqueId: props.uniqueIdFn() };
+    } else {
+      return null;
+    }
   }
 
   render() {
